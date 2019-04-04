@@ -6,6 +6,7 @@ const ProductContext = React.createContext();
 
 class ProductProvider extends Component {
   state = {
+    cart:[],
     products:[],
     detailProduct:detailProduct
   }
@@ -23,11 +24,31 @@ class ProductProvider extends Component {
       return {products:temProducts};
     })
   }
-  handelDetail=()=>{
-    console.log('hello from detail')
+
+  getItem=(id)=>{
+    const product = this.state.products.find(item=>item.id===id)
+    return product
   }
-  addToCart=()=>{
-    console.log('hello from add to cart')
+  handleDetail=(id)=>{
+    const product= this.getItem(id);
+    this.setState(()=>{
+      return {detailProduct:product}
+    })
+  }
+  addToCart=(id)=>{
+    let temProducts=[...this.state.products];
+    const index=temProducts.indexOf(this.getItem(id));
+    const product = temProducts[index];
+    product.inCart = true;
+    product.count=1;
+    const price = product.price;
+    product.total= price;
+    this.setState(()=>{
+      return {product:temProducts,cart:[...this.state.cart,product]}
+    },()=>{
+      console.log(this.state)
+    })
+
   }
   tester=()=>{
     console.log('state products:',this.state.products[0].inCart)
@@ -44,7 +65,7 @@ class ProductProvider extends Component {
   }
   render() {
     return (
-      <ProductContext.Provider value={{...this.state,handelDetail:this.handelDetail,
+      <ProductContext.Provider value={{...this.state,handleDetail:this.handleDetail,
       addToCart:this.addToCart}}>
       <button onClick={this.tester}>test me</button> 
       {
