@@ -23,7 +23,7 @@ export default class Product extends Component {
                         disabled={inCart ? true : false} 
                         onClick={() => {
                            value.addToCart(id);
-                           
+                           value.openModal(id);
                         }}>
           {inCart?(<p className="text-capitalize mb-0" disabled>in cart</p>):(<i className="fas fa-cart-plus"></i>)}
           </button>
